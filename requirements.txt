@@ -14,5 +14,13 @@ gradio
 einops
 onnxruntime
 basicsr
+av==8.0.3
+cloudpickle
+fvcore==0.1.5
+iopath==0.1.7
+omegaconf==2.1
+hydra-core==1.1
+pycocotools==2.0.2
+
 # ./preprocess/detectron2
 # ./preprocess/detectron2/projects/DensePose
