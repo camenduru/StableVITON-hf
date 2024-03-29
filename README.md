@@ -1,8 +1,8 @@
 ---
 title: StableVITON
-emoji: 🦀
-colorFrom: pink
-colorTo: red
+emoji: 👕👔👗
+colorFrom: blue
+colorTo: blue
 sdk: gradio
 sdk_version: 4.23.0
 app_file: app.py
