@@ -14,7 +14,7 @@ gradio
 einops
 onnxruntime
 basicsr
-av==8.0.3
+av
 cloudpickle
 fvcore
 omegaconf==2.1
