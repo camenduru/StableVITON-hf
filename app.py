@@ -4,8 +4,8 @@ try:
     import detectron2
     import densepose
 except ImportError:
-    os.system('pip install -e ./preprocess/detectron2')
-    os.system('pip install -e ./preprocess/detectron2/projects/DensePose')
+    os.system('pip install ./preprocess/detectron2')
+    os.system('pip install ./preprocess/detectron2/projects/DensePose')
 
 import sys
 import time
