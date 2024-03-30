@@ -7,7 +7,7 @@ opencv-python
 pillow
 diffusers==0.20.2
 transformers
-xformers==0.0.19
+xformers==0.0.20
 accelerate
 matplotlib
 tqdm
