@@ -1,6 +1,7 @@
 import numpy as np
 import cv2
 from PIL import Image, ImageDraw
+import torch
 
 label_map = {
     "background": 0,
@@ -169,3 +170,37 @@ def get_mask_location(model_type, category, model_parse: Image.Image, keypoint: 
     mask_gray = Image.fromarray(inpaint_mask.astype(np.uint8) * 127)
 
     return mask, mask_gray
+
+def get_tensor(img, h, w, is_mask=False):
+    img = np.array(img.resize((w, h))).astype(np.float32)
+    if not is_mask:
+        img = (img / 127.5) - 1.0
+    else:
+        img = (img < 128).astype(np.float32)[:,:,None]
+    return torch.from_numpy(img)[None]
+    
+def get_batch(image, cloth, densepose, agn_img, agn_mask, img_h, img_w):
+    batch = dict()
+    batch["image"] = get_tensor(image, img_h, img_w)
+    batch["cloth"] = get_tensor(cloth, img_h, img_w)
+    batch["image_densepose"] = get_tensor(densepose, img_h, img_w)
+    batch["agn"] = get_tensor(agn_img, img_h, img_w)
+    batch["agn_mask"] = get_tensor(agn_mask, img_h, img_w, is_mask=True)
+    batch["txt"] = ""
+    return batch
+
+def tensor2img(x):
+    '''
+    x : [BS x c x H x W] or [c x H x W]
+    '''
+    if x.ndim == 3:
+        x = x.unsqueeze(0)
+    BS, C, H, W = x.shape
+    x = x.permute(0,2,3,1).reshape(-1, W, C).detach().cpu().numpy()
+    x = np.clip(x, -1, 1)
+    x = (x+1)/2
+    x = np.uint8(x*255.0)
+    if x.shape[-1] == 1:
+        x = np.concatenate([x,x,x], axis=-1)
+    return x
+
