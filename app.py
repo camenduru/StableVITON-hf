@@ -28,6 +28,7 @@ IMG_H = 512
 IMG_W = 384
 
 openpose_model_hd = OpenPose(0)
+openpose_model_hd.preprocessor.body_estimation.model.to('cuda')
 parsing_model_hd = Parsing(0)
 densepose_model_hd = DensePose4Gradio(
     cfg='preprocess/detectron2/projects/DensePose/configs/densepose_rcnn_R_50_FPN_s1x.yaml',
@@ -91,8 +92,6 @@ def stable_viton_model_hd(
 def process_hd(vton_img, garm_img, n_steps):
     model_type = 'hd'
     category = 0  # 0:upperbody; 1:lowerbody; 2:dress
-
-    openpose_model_hd.preprocessor.body_estimation.model.to('cuda')
 
     stt = time.time()
     print('load images... ', end='')
@@ -186,11 +185,11 @@ with gr.Blocks(css='style.css') as demo:
         run_button = gr.Button(value="Run")
         # TODO: change default values (important!)
         # n_samples = gr.Slider(label="Images", minimum=1, maximum=4, value=1, step=1)
-        n_steps = gr.Slider(label="Steps", minimum=20, maximum=70, value=20, step=1)
+        n_steps = gr.Slider(label="Steps", minimum=20, maximum=70, value=25, step=1)
         # guidance_scale = gr.Slider(label="Guidance scale", minimum=1.0, maximum=5.0, value=2.0, step=0.1)
         # seed = gr.Slider(label="Seed", minimum=-1, maximum=2147483647, step=1, value=-1)
 
     ips = [vton_img, garm_img, n_steps]
     run_button.click(fn=process_hd, inputs=ips, outputs=[result_gallery])
 
-demo.queue().launch()
+demo.queue().launch(share=True)
