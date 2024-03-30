@@ -24,8 +24,8 @@ from preprocess.openpose.run_openpose import OpenPose
 
 os.environ['GRADIO_TEMP_DIR'] = './tmp'  # TODO: turn off when final upload
 
-IMG_H = 1024
-IMG_W = 768
+IMG_H = 512
+IMG_W = 384
 
 openpose_model_hd = OpenPose(0)
 parsing_model_hd = Parsing(0)
@@ -38,13 +38,13 @@ category_dict = ['upperbody', 'lowerbody', 'dress']
 category_dict_utils = ['upper_body', 'lower_body', 'dresses']
 
 # #### model init >>>>
-config = OmegaConf.load("./configs/VITON512.yaml")
+config = OmegaConf.load("./configs/VITON.yaml")
 config.model.params.img_H = IMG_H
 config.model.params.img_W = IMG_W
 params = config.model.params
 
 model = create_model(config_path=None, config=config)
-model.load_state_dict(torch.load("./checkpoints/VITONHD_1024.ckpt", map_location="cpu")["state_dict"])
+model.load_state_dict(torch.load("./checkpoints/VITONHD.ckpt", map_location="cpu")["state_dict"])
 model = model.cuda()
 model.eval()
 sampler = PLMSSampler(model)
@@ -130,7 +130,6 @@ def process_hd(vton_img, garm_img, n_steps):
         batch,
         n_steps
     )
-    breakpoint()
     return sample
 
 
@@ -181,12 +180,13 @@ with gr.Blocks(css='style.css') as demo:
                 examples_per_page=14,
                 examples=example_garment_ps)
         with gr.Column():
-            result_gallery = gr.Gallery(label='Output', show_label=False, elem_id="gallery", preview=True, scale=1)
+            result_gallery = gr.Image(label='Output', show_label=False, preview=True, scale=1)
+            # result_gallery = gr.Gallery(label='Output', show_label=False, elem_id="gallery", preview=True, scale=1)
     with gr.Column():
         run_button = gr.Button(value="Run")
         # TODO: change default values (important!)
         # n_samples = gr.Slider(label="Images", minimum=1, maximum=4, value=1, step=1)
-        n_steps = gr.Slider(label="Steps", minimum=20, maximum=100, value=50, step=1)
+        n_steps = gr.Slider(label="Steps", minimum=20, maximum=70, value=20, step=1)
         # guidance_scale = gr.Slider(label="Guidance scale", minimum=1.0, maximum=5.0, value=2.0, step=0.1)
         # seed = gr.Slider(label="Seed", minimum=-1, maximum=2147483647, step=1, value=-1)
 
