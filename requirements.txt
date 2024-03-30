@@ -21,6 +21,3 @@ fvcore
 omegaconf==2.1
 hydra-core
 pycocotools
-
-# ./preprocess/detectron2
-# ./preprocess/detectron2/projects/DensePose
