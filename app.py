@@ -1,4 +1,4 @@
-# import spaces  # TODO: turn on when final upload
+import spaces
 import os
 import sys
 import time
@@ -87,7 +87,7 @@ def stable_viton_model_hd(
     pil_output = Image.fromarray(output)
     return pil_output
     
-# @spaces.GPU  # TODO: turn on when final upload
+@spaces.GPU  # TODO: turn on when final upload
 @torch.no_grad()
 def process_hd(vton_img, garm_img, n_steps):
     model_type = 'hd'
