@@ -11,7 +11,7 @@ xformers==0.0.20
 accelerate
 matplotlib
 tqdm
-gradio
+gradio==3.44.4
 einops
 onnxruntime
 basicsr
