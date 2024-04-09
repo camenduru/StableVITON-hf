@@ -116,7 +116,7 @@ class Box2BoxTransform:
         return pred_boxes.reshape(deltas.shape)
 
 
-@torch.jit.script
+# @torch.jit.script
 class Box2BoxTransformRotated:
     """
     The box-to-box transform defined in Rotated R-CNN. The transformation is parameterized
