@@ -21,4 +21,4 @@ fvcore
 omegaconf==2.1
 hydra-core
 pycocotools
-pytorch-lightning==1.5.0
+pytorch-lightning
