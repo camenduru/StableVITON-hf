@@ -2,23 +2,25 @@
 import os
 import sys
 import time
-from pathlib import Path
-from omegaconf import OmegaConf
 from glob import glob
 from os.path import join as opj
+from pathlib import Path
 
+import apply_net
 import gradio as gr
-from PIL import Image
 import torch
+from omegaconf import OmegaConf
+from PIL import Image
 
-from utils_stableviton import get_mask_location, get_batch, tensor2img
 from cldm.model import create_model
 from cldm.plms_hacked import PLMSSampler
+from detectron2.data.detection_utils import _apply_exif_orientation, convert_PIL_to_numpy
+from utils_stableviton import get_batch, get_mask_location, tensor2img
 
 PROJECT_ROOT = Path(__file__).absolute().parents[1].absolute()
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from preprocess.detectron2.projects.DensePose.apply_net_gradio import DensePose4Gradio
+# from detectron2.projects.DensePose.apply_net_gradio import DensePose4Gradio
 from preprocess.humanparsing.run_parsing import Parsing
 from preprocess.openpose.run_openpose import OpenPose
 
@@ -30,10 +32,10 @@ IMG_W = 384
 openpose_model_hd = OpenPose(0)
 openpose_model_hd.preprocessor.body_estimation.model.to('cuda')
 parsing_model_hd = Parsing(0)
-densepose_model_hd = DensePose4Gradio(
-    cfg='preprocess/detectron2/projects/DensePose/configs/densepose_rcnn_R_50_FPN_s1x.yaml',
-    model='https://dl.fbaipublicfiles.com/densepose/densepose_rcnn_R_50_FPN_s1x/165712039/model_final_162be9.pkl',
-)
+# densepose_model_hd = DensePose4Gradio(
+#     cfg='preprocess/detectron2/projects/DensePose/configs/densepose_rcnn_R_50_FPN_s1x.yaml',
+#     model='https://dl.fbaipublicfiles.com/densepose/densepose_rcnn_R_50_FPN_s1x/165712039/model_final_162be9.pkl',
+# )
 
 category_dict = ['upperbody', 'lowerbody', 'dress']
 category_dict_utils = ['upper_body', 'lower_body', 'dresses']
@@ -50,6 +52,8 @@ model = model.cuda()
 model.eval()
 sampler = PLMSSampler(model)
 # #### model init <<<<
+
+
 def stable_viton_model_hd(
         batch,
         n_steps,
@@ -69,25 +73,27 @@ def stable_viton_model_hd(
     sampler.model.batch = batch
 
     ts = torch.full((1,), 999, device=z.device, dtype=torch.long)
-    start_code = model.q_sample(z, ts)     
+    start_code = model.q_sample(z, ts)
 
     output, _, _ = sampler.sample(
         n_steps,
         bs,
-        (4, IMG_H//8, IMG_W//8),
+        (4, IMG_H // 8, IMG_W // 8),
         cond,
-        x_T=start_code, 
+        x_T=start_code,
         verbose=False,
         eta=0.0,
-        unconditional_conditioning=uc_full,       
+        unconditional_conditioning=uc_full,
     )
 
     output = model.decode_first_stage(output)
     output = tensor2img(output)
     pil_output = Image.fromarray(output)
     return pil_output
-    
+
 # @spaces.GPU  # TODO: turn on when final upload
+
+
 @torch.no_grad()
 def process_hd(vton_img, garm_img, n_steps):
     model_type = 'hd'
@@ -112,19 +118,28 @@ def process_hd(vton_img, garm_img, n_steps):
     stt = time.time()
     print('get densepose... ', end='')
     vton_img = vton_img.resize((IMG_W, IMG_H))  # size for densepose
-    densepose = densepose_model_hd.execute(vton_img)  # densepose
+    # densepose = densepose_model_hd.execute(vton_img)  # densepose
+
+    human_img_arg = _apply_exif_orientation(vton_img.resize((IMG_W, IMG_H)))
+    human_img_arg = convert_PIL_to_numpy(human_img_arg, format="BGR")
+    args = apply_net.create_argument_parser().parse_args(('show', './configs/densepose_rcnn_R_50_FPN_s1x.yaml', './ckpt/densepose/model_final_162be9.pkl', 'dp_segm', '-v', '--opts', 'MODEL.DEVICE', 'cuda'))
+    # verbosity = getattr(args, "verbosity", None)
+    pose_img = args.func(args, human_img_arg)
+    pose_img = pose_img[:, :, ::-1]
+    pose_img = Image.fromarray(pose_img).resize((IMG_W, IMG_H))
+
     print('%.2fs' % (time.time() - stt))
 
     batch = get_batch(
-        vton_img, 
-        garm_img, 
-        densepose, 
-        masked_vton_img, 
-        mask, 
-        IMG_H, 
+        vton_img,
+        garm_img,
+        densepose,
+        masked_vton_img,
+        mask,
+        IMG_H,
         IMG_W
     )
-    
+
     sample = stable_viton_model_hd(
         batch,
         n_steps
