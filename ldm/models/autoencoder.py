@@ -9,7 +9,7 @@ from ldm.modules.distributions.distributions import DiagonalGaussianDistribution
 
 from ldm.util import instantiate_from_config
 from ldm.modules.ema import LitEma
-
+ 
 
 class AutoencoderKL(nn.Module):
     def __init__(self,
