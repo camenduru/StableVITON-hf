@@ -1,7 +1,7 @@
 from preprocess.detectron2.projects.DensePose.apply_net_gradio import DensePose4Gradio
 from preprocess.humanparsing.run_parsing import Parsing
 from preprocess.openpose.run_openpose import OpenPose
-
+import pytorch_lightning as pl
 import os
 import sys
 import time
