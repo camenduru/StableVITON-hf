@@ -1,4 +1,3 @@
-import spaces
 import os
 import sys
 import time
@@ -10,6 +9,7 @@ import gradio as gr
 import torch
 from omegaconf import OmegaConf
 from PIL import Image
+import spaces
 print("pip import done")
 
 from cldm.model import create_model
@@ -26,7 +26,7 @@ from preprocess.openpose.run_openpose import OpenPose
 # import apply_net
 print("app import done")
 
-os.environ['GRADIO_TEMP_DIR'] = './tmp'  # TODO: turn off when final upload
+# os.environ['GRADIO_TEMP_DIR'] = './tmp'  # TODO: turn off when final upload
 
 IMG_H = 512
 IMG_W = 384
