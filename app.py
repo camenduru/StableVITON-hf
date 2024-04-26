@@ -1,4 +1,4 @@
-# import spaces
+import spaces
 import os
 import sys
 import time
@@ -23,7 +23,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 from preprocess.detectron2.projects.DensePose.apply_net_gradio import DensePose4Gradio
 from preprocess.humanparsing.run_parsing import Parsing
 from preprocess.openpose.run_openpose import OpenPose
-import apply_net
+# import apply_net
 print("app import done")
 
 os.environ['GRADIO_TEMP_DIR'] = './tmp'  # TODO: turn off when final upload
@@ -118,15 +118,15 @@ def process_hd(vton_img, garm_img, n_steps):
     stt = time.time()
     print('get densepose... ', end='')
     vton_img = vton_img.resize((IMG_W, IMG_H))  # size for densepose
-    # densepose = densepose_model_hd.execute(vton_img)  # densepose
+    densepose = densepose_model_hd.execute(vton_img)  # densepose
 
-    human_img_arg = _apply_exif_orientation(vton_img.resize((IMG_W, IMG_H)))
-    human_img_arg = convert_PIL_to_numpy(human_img_arg, format="BGR")
-    args = apply_net.create_argument_parser().parse_args(('show', './configs/densepose_rcnn_R_50_FPN_s1x.yaml', './ckpt/densepose/model_final_162be9.pkl', 'dp_segm', '-v', '--opts', 'MODEL.DEVICE', 'cuda'))
+    # human_img_arg = _apply_exif_orientation(vton_img.resize((IMG_W, IMG_H)))
+    # human_img_arg = convert_PIL_to_numpy(human_img_arg, format="BGR")
+    # args = apply_net.create_argument_parser().parse_args(('show', './configs/densepose_rcnn_R_50_FPN_s1x.yaml', './ckpt/densepose/model_final_162be9.pkl', 'dp_segm', '-v', '--opts', 'MODEL.DEVICE', 'cuda'))
     # verbosity = getattr(args, "verbosity", None)
-    pose_img = args.func(args, human_img_arg)
-    pose_img = pose_img[:, :, ::-1]
-    pose_img = Image.fromarray(pose_img).resize((IMG_W, IMG_H))
+    # pose_img = args.func(args, human_img_arg)
+    # pose_img = pose_img[:, :, ::-1]
+    # pose_img = Image.fromarray(pose_img).resize((IMG_W, IMG_H))
 
     print('%.2fs' % (time.time() - stt))
 
