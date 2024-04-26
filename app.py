@@ -11,6 +11,7 @@ import gradio as gr
 import torch
 from omegaconf import OmegaConf
 from PIL import Image
+print("pip import done")
 
 from cldm.model import create_model
 from cldm.plms_hacked import PLMSSampler
@@ -23,6 +24,8 @@ sys.path.insert(0, str(PROJECT_ROOT))
 # from detectron2.projects.DensePose.apply_net_gradio import DensePose4Gradio
 from preprocess.humanparsing.run_parsing import Parsing
 from preprocess.openpose.run_openpose import OpenPose
+
+print("app import done")
 
 os.environ['GRADIO_TEMP_DIR'] = './tmp'  # TODO: turn off when final upload
 
@@ -194,8 +197,8 @@ with gr.Blocks(css='style.css') as demo:
                 examples_per_page=14,
                 examples=example_garment_ps)
         with gr.Column():
-            result_gallery = gr.Image(label='Output', show_label=False, preview=True, scale=1)
-            # result_gallery = gr.Gallery(label='Output', show_label=False, elem_id="gallery", preview=True, scale=1)
+            result_gallery = gr.Image(label='Output', show_label=False, scale=1)
+            # result_gallery = gr.Gallery(label='Output', show_label=False, elem_id="gallery", scale=1)
     with gr.Column():
         run_button = gr.Button(value="Run")
         # TODO: change default values (important!)
