@@ -14,11 +14,11 @@ import torch
 from omegaconf import OmegaConf
 from PIL import Image
 import spaces
-print("pip import done")
 
 from cldm.model import create_model
 from cldm.plms_hacked import PLMSSampler
 from utils_stableviton import get_batch, get_mask_location, tensor2img
+print("pip import done")
 
 PROJECT_ROOT = Path(__file__).absolute().parents[1].absolute()
 sys.path.insert(0, str(PROJECT_ROOT))
