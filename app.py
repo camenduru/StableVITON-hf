@@ -243,7 +243,7 @@ with gr.Blocks(css='style.css') as demo:
                 examples_per_page=14,
                 examples=example_garment_ps)
         with gr.Column():
-            result_gallery = gr.Image(label='Output', show_label=False, preview=True, scale=1)
+            result_gallery = gr.Image(label='Output', show_label=False, scale=1)
             # result_gallery = gr.Gallery(label='Output', show_label=False, elem_id="gallery", preview=True, scale=1)
     with gr.Column():
         run_button = gr.Button(value="Run")
