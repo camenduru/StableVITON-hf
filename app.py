@@ -20,7 +20,7 @@ from cldm.plms_hacked import PLMSSampler
 from utils_stableviton import get_mask_location, get_batch, tensor2img, center_crop
 
 PROJECT_ROOT = Path(__file__).absolute().parents[1].absolute()
-sys.path.insert(0, str(PROJECT_ROOT))
+sys.path.insert(0, str(PROJECT_ROOT)) 
 
 IMG_H = 1024
 IMG_W = 768
