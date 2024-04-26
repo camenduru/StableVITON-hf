@@ -1,4 +1,4 @@
-# import spaces
+import spaces
 import os
 import sys
 import time
@@ -94,9 +94,7 @@ def stable_viton_model_hd(
     pil_output = Image.fromarray(output)
     return pil_output
 
-# @spaces.GPU  # TODO: turn on when final upload
-
-
+@spaces.GPU  # TODO: turn on when final upload
 @torch.no_grad()
 def process_hd(vton_img, garm_img, n_steps):
     model_type = 'hd'
@@ -210,4 +208,4 @@ with gr.Blocks(css='style.css') as demo:
     ips = [vton_img, garm_img, n_steps]
     run_button.click(fn=process_hd, inputs=ips, outputs=[result_gallery])
 
-demo.queue().launch(share=True)
+demo.queue().launch()
