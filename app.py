@@ -1,4 +1,4 @@
-import spaces
+# import spaces
 import os
 import sys
 import time
@@ -21,7 +21,7 @@ from utils_stableviton import get_batch, get_mask_location, tensor2img
 PROJECT_ROOT = Path(__file__).absolute().parents[1].absolute()
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from detectron2.projects.DensePose.apply_net_gradio import DensePose4Gradio
+from preprocess.detectron2.projects.DensePose.apply_net_gradio import DensePose4Gradio
 from preprocess.humanparsing.run_parsing import Parsing
 from preprocess.openpose.run_openpose import OpenPose
 
@@ -94,7 +94,7 @@ def stable_viton_model_hd(
     pil_output = Image.fromarray(output)
     return pil_output
 
-@spaces.GPU  # TODO: turn on when final upload
+# @spaces.GPU  # TODO: turn on when final upload
 @torch.no_grad()
 def process_hd(vton_img, garm_img, n_steps):
     model_type = 'hd'
