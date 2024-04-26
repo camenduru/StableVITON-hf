@@ -6,7 +6,6 @@ from glob import glob
 from os.path import join as opj
 from pathlib import Path
 
-import apply_net
 import gradio as gr
 import torch
 from omegaconf import OmegaConf
@@ -24,7 +23,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 # from preprocess.detectron2.projects.DensePose.apply_net_gradio import DensePose4Gradio
 from preprocess.humanparsing.run_parsing import Parsing
 from preprocess.openpose.run_openpose import OpenPose
-
+import apply_net
 print("app import done")
 
 os.environ['GRADIO_TEMP_DIR'] = './tmp'  # TODO: turn off when final upload
