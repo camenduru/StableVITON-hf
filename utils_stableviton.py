@@ -24,7 +24,6 @@ label_map = {
     "scarf": 17,
 }
 
-
 def extend_arm_mask(wrist, elbow, scale):
     wrist = elbow + scale * (wrist - elbow)
     return wrist
@@ -56,7 +55,7 @@ def refine_mask(mask):
     return refine_mask
 
 
-def get_mask_location(model_type, category, model_parse: Image.Image, keypoint: dict, width=384, height=512):
+def get_mask_location(model_type, category, model_parse: Image.Image, keypoint: dict, width=384, height=512, radius=5):
     im_parse = model_parse.resize((width, height), Image.NEAREST)
     parse_array = np.array(im_parse)
 
@@ -149,10 +148,10 @@ def get_mask_location(model_type, category, model_parse: Image.Image, keypoint: 
         parser_mask_fixed += hands_left + hands_right
 
     parser_mask_fixed = np.logical_or(parser_mask_fixed, parse_head)
-    parse_mask = cv2.dilate(parse_mask, np.ones((5, 5), np.uint16), iterations=5)
+    parse_mask = cv2.dilate(parse_mask, np.ones((radius, radius), np.uint16), iterations=5)
     if category == 'dresses' or category == 'upper_body':
         neck_mask = (parse_array == 18).astype(np.float32)
-        neck_mask = cv2.dilate(neck_mask, np.ones((5, 5), np.uint16), iterations=1)
+        neck_mask = cv2.dilate(neck_mask, np.ones((radius, radius), np.uint16), iterations=1)
         neck_mask = np.logical_and(neck_mask, np.logical_not(parse_head))
         parse_mask = np.logical_or(parse_mask, neck_mask)
         arm_mask = cv2.dilate(np.logical_or(im_arms_left, im_arms_right).astype('float32'), np.ones((5, 5), np.uint16), iterations=4)
@@ -204,3 +203,14 @@ def tensor2img(x):
         x = np.concatenate([x,x,x], axis=-1)
     return x
 
+def center_crop(image):
+    width, height = image.size
+    new_height = height
+    new_width = height*3/4
+    left = (width - new_width)/2
+    top = (height - new_height)/2
+    right = (width + new_width)/2
+    bottom = (height + new_height)/2
+
+    image = image.crop((left, top, right, bottom))
+    return image

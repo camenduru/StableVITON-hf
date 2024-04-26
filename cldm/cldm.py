@@ -32,6 +32,7 @@ class ControlLDM(LatentDiffusion):
             *args, 
             **kwargs
         ):
+        self.device = torch.device("cuda")
         self.control_stage_config = control_stage_config
         self.use_pbe_weight = use_pbe_weight
         self.u_cond_percent = u_cond_percent
@@ -62,7 +63,7 @@ class ControlLDM(LatentDiffusion):
                     control = control[:bs]
                 control = control.to(self.device)
                 control = einops.rearrange(control, 'b h w c -> b c h w')
-                control = control.to(memory_format=torch.contiguous_format).float()
+                control = control.to(memory_format=torch.contiguous_format)
                 control_lst.append(control)
             control = control_lst
         else:
@@ -71,7 +72,7 @@ class ControlLDM(LatentDiffusion):
                 control = control[:bs]
             control = control.to(self.device)
             control = einops.rearrange(control, 'b h w c -> b c h w')
-            control = control.to(memory_format=torch.contiguous_format).float()
+            control = control.to(memory_format=torch.contiguous_format)
             control = [control]
         cond_dict = dict(c_crossattn=[c], c_concat=control) 
         if self.first_stage_key_cond is not None:

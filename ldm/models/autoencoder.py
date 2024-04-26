@@ -1,5 +1,5 @@
 import torch
-import pytorch_lightning as pl
+# import pytorch_lightning as pl
 import torch.nn as nn
 import torch.nn.functional as F
 from contextlib import contextmanager
@@ -9,9 +9,9 @@ from ldm.modules.distributions.distributions import DiagonalGaussianDistribution
 
 from ldm.util import instantiate_from_config
 from ldm.modules.ema import LitEma
- 
 
-class AutoencoderKL(pl.LightningModule):
+
+class AutoencoderKL(nn.Module):
     def __init__(self,
                  ddconfig,
                  lossconfig,
