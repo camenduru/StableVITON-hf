@@ -21,7 +21,7 @@ from utils_stableviton import get_batch, get_mask_location, tensor2img
 PROJECT_ROOT = Path(__file__).absolute().parents[1].absolute()
 sys.path.insert(0, str(PROJECT_ROOT))
 
-# from detectron2.projects.DensePose.apply_net_gradio import DensePose4Gradio
+from detectron2.projects.DensePose.apply_net_gradio import DensePose4Gradio
 from preprocess.humanparsing.run_parsing import Parsing
 from preprocess.openpose.run_openpose import OpenPose
 
@@ -35,10 +35,10 @@ IMG_W = 384
 openpose_model_hd = OpenPose(0)
 openpose_model_hd.preprocessor.body_estimation.model.to('cuda')
 parsing_model_hd = Parsing(0)
-# densepose_model_hd = DensePose4Gradio(
-#     cfg='preprocess/detectron2/projects/DensePose/configs/densepose_rcnn_R_50_FPN_s1x.yaml',
-#     model='https://dl.fbaipublicfiles.com/densepose/densepose_rcnn_R_50_FPN_s1x/165712039/model_final_162be9.pkl',
-# )
+densepose_model_hd = DensePose4Gradio(
+    cfg='preprocess/detectron2/projects/DensePose/configs/densepose_rcnn_R_50_FPN_s1x.yaml',
+    model='https://dl.fbaipublicfiles.com/densepose/densepose_rcnn_R_50_FPN_s1x/165712039/model_final_162be9.pkl',
+)
 
 category_dict = ['upperbody', 'lowerbody', 'dress']
 category_dict_utils = ['upper_body', 'lower_body', 'dresses']
