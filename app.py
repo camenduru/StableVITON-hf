@@ -1,3 +1,7 @@
+from preprocess.detectron2.projects.DensePose.apply_net_gradio import DensePose4Gradio
+from preprocess.humanparsing.run_parsing import Parsing
+from preprocess.openpose.run_openpose import OpenPose
+
 import os
 import sys
 import time
@@ -14,19 +18,10 @@ print("pip import done")
 
 from cldm.model import create_model
 from cldm.plms_hacked import PLMSSampler
-from detectron2.data.detection_utils import _apply_exif_orientation, convert_PIL_to_numpy
 from utils_stableviton import get_batch, get_mask_location, tensor2img
 
 PROJECT_ROOT = Path(__file__).absolute().parents[1].absolute()
 sys.path.insert(0, str(PROJECT_ROOT))
-
-from preprocess.detectron2.projects.DensePose.apply_net_gradio import DensePose4Gradio
-from preprocess.humanparsing.run_parsing import Parsing
-from preprocess.openpose.run_openpose import OpenPose
-# import apply_net
-print("app import done")
-
-# os.environ['GRADIO_TEMP_DIR'] = './tmp'  # TODO: turn off when final upload
 
 IMG_H = 512
 IMG_W = 384
