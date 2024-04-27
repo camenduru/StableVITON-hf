@@ -124,7 +124,7 @@ def stable_viton_model_hd2(
     start_code = model2.q_sample(z, ts)
     torch.cuda.empty_cache()
     output, _, _ = sampler2.sample(
-        n_steps,
+        n_steps, 
         bs,
         (4, IMG_H//8, IMG_W//8),
         cond,
