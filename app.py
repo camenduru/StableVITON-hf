@@ -14,6 +14,8 @@ import torch
 from omegaconf import OmegaConf
 from PIL import Image
 import spaces
+print(torch.cuda.is_available(), torch.cuda.device_count())
+
 
 from cldm.model import create_model
 from cldm.plms_hacked import PLMSSampler
@@ -172,6 +174,7 @@ def process_hd(vton_img, garm_img, n_steps, is_custom):
     vton_img = vton_img.resize((IMG_W, IMG_H))  # size for densepose
     densepose = densepose_model_hd.execute(vton_img)  # densepose
     print('%.2fs' % (time.time() - stt))
+    breakpoint()
 
     batch = get_batch(
         vton_img, 

@@ -176,7 +176,7 @@ def get_tensor(img, h, w, is_mask=False):
         img = (img / 127.5) - 1.0
     else:
         img = (img < 128).astype(np.float32)[:,:,None]
-    return torch.from_numpy(img)[None]
+    return torch.from_numpy(img)[None].cuda()
     
 def get_batch(image, cloth, densepose, agn_img, agn_mask, img_h, img_w):
     batch = dict()
