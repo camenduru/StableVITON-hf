@@ -167,14 +167,11 @@ def process_hd(vton_img, garm_img, n_steps, is_custom):
     masked_vton_img = Image.composite(mask_gray, vton_img, mask)  # agnostic map
     print('%.2fs' % (time.time() - stt))
 
-    # breakpoint()
-
     stt = time.time()
     print('get densepose... ', end='')
     vton_img = vton_img.resize((IMG_W, IMG_H))  # size for densepose
     densepose = densepose_model_hd.execute(vton_img)  # densepose
     print('%.2fs' % (time.time() - stt))
-    breakpoint()
 
     batch = get_batch(
         vton_img, 
