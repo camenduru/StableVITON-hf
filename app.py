@@ -55,8 +55,8 @@ model2.load_state_dict(torch.load("./checkpoints/VITONHD_1024.ckpt", map_locatio
 model2 = model.cuda()
 model2.eval()
 sampler2 = PLMSSampler(model2)
-
 # #### model init <<<<
+
 @spaces.GPU
 @torch.autocast("cuda")
 @torch.no_grad()
@@ -98,6 +98,7 @@ def stable_viton_model_hd(
     pil_output = Image.fromarray(output)
     return pil_output
 
+@spaces.GPU
 @torch.autocast("cuda")
 @torch.no_grad()
 def stable_viton_model_hd2(
@@ -138,7 +139,7 @@ def stable_viton_model_hd2(
     pil_output = Image.fromarray(output)
     return pil_output
     
-# @spaces.GPU  # TODO: turn on when final upload
+@spaces.GPU
 @torch.no_grad()
 def process_hd(vton_img, garm_img, n_steps, is_custom):
     model_type = 'hd'
